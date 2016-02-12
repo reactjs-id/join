@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gabung ReactID</title>
+    <link rel="stylesheet" href="http://react.id/style.css">    
+</head>
+<body>
+    <div id="root">
+        <div class="page-container app-content">
+            <div class="page-blog page-loader-container">
+                <div class="hero-transition-manager">
+                    <section class="hero add show shown">
+                        <div class="entrance-transition title-entrance show">
+                            <h1 class="title">
+                                <span class="word-animator">
+                                    Loading...
+                                </span>
+                            </h1>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://npmcdn.com/axios@0.9.1/dist/axios.min.js" charset="utf-8"></script>
+    <script src="react-towel.js" charset="utf-8"></script>
+    <script type="text/babel">
+
+        class Slack extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    message: null
+                };
+            }
+            onSubmit(e) {
+                e.preventDefault();
+                let email = this.refs.email.value;
+                this.setState({message: null});
+                axios.post(`https://reactjs-id.herokuapp.com/invite`, {
+                    email,
+                    channel: 'react-id',
+                    coc: 0
+                }).then(response => {
+                    this.setState({message: `Wuut! silakan cek email ${email} :D`})
+                }, err => {
+                    this.setState({message: err.data.msg})
+                });
+            }
+            render() {
+                let {message} = this.state;
+                return (
+                    <footer className="footer" id="join-us">
+                        <div className="subscription">
+                            <img style={{width: '80px', height: '80px', marginBottom: '10px'}} src="http://react.id/img/slack.png" alt=""/>
+                            <h2>React-ID di Slack</h2>
+                            <p>Masukkan email Anda untuk mendapatkan undangan dan berdiskusi di Slack.</p>
+
+                            <form onSubmit={this.onSubmit.bind(this)}>
+                                <label for="subscription-email" className="label">Masukkan email di sini...</label>
+                                <input ref="email" id="slack-email" className="email" placeholder="Enter your email..." required="" />
+                                <button className="submit" type="submit"><span className="submit-text">Dapatkan Undangan</span></button>
+                            </form>
+                            {message ?
+                                <p>{message}</p>
+                                : null}
+                            
+                        </div>
+                        <div className="content" style={{paddingTop: 0}}>
+                            <div className="copyright" style={{paddingTop: 0}}>
+                                <ul>
+                                    <li>© 2016</li>
+                                    <li><a href="https://www.facebook.com/groups/442974152553174/">Komunitas ReactJS Indonesia</a></li>
+                                    <li>Dibangun dengan <a href="http://reactjs.com/" target="_blank">ReactJS</a>.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>
+                );
+            }
+        }
+
+        ReactDOM.render(<Slack />, document.getElementById('root'));
+
+    </script>
+</body>
+</html>
